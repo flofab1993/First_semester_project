@@ -12,8 +12,8 @@ submit.onclick = function(){
     console.log(errorAttempt);
 
 
-    if (username == "flo" && password == "bremen") { //Opens site with right combination
-        alert ("Login successfully");
+    if ((username == "flo" && password == "bremen") || (username == "ferdinand" && password == "hamburg") || (username == "malte" && password == "köln") ) { //Opens site with right combination
+        alert ("Login successful");
         window.location.href = "http://transfermarkt.de"; // Redirecting to other page.
         return false;
 
