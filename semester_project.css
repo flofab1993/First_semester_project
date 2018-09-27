@@ -18,3 +18,8 @@ h1 {
     font-family: 'Arial', sans-serif;
     font-weight: lighter;
 }
+
+.superFont {
+    font-family: 'Arial', sans-serif;
+    font-size: 200px
+}
