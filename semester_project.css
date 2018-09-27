@@ -13,3 +13,8 @@ h1 {
     font-family: 'Montserrat', sans-serif;
     font-weight: lighter;
 }
+
+.customFont {
+    font-family: 'Arial', sans-serif;
+    font-weight: lighter;
+}
