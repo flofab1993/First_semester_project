@@ -13,3 +13,16 @@ h1 {
     font-family: 'Montserrat', sans-serif;
     font-weight: lighter;
 }
+
+input {
+    border: 1px solid rgb(196, 196, 196);
+    border-radius: 2px;
+}
+
+.loginButton {
+    transition-duration: 0.4s;
+}
+
+.loginButton:hover {
+    background-color: rgb(196, 196, 196);
+}
