@@ -33,3 +33,12 @@ submit.onclick = function(){
         return false;
     }
 }
+
+password.addEventListener("keyup", function(event) {  //Trigger login button by pressing enter
+    event.preventDefault();
+
+    if (event.keyCode === 13) {
+        // Trigger the button element with a click
+        document.getElementById("submit").click();
+      }
+    });
