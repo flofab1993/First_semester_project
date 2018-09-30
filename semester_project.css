@@ -5,8 +5,10 @@ body {
 
 .center {
     margin: auto;
-    text-align: center;
+    text-align: left;
     padding: 50px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: lighter;
 }
 
 h1 {
@@ -14,9 +16,16 @@ h1 {
     font-weight: lighter;
 }
 
-input {
+p {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: lighter;
+}
+
+.input {
     border: 1px solid rgb(196, 196, 196);
     border-radius: 2px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: lighter;
 }
 
 .loginButton {
