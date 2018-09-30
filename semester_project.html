@@ -4,21 +4,31 @@
     <meta charset="UTF-8">
     <title>Login function</title>
     <link href="semester_project.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 
     <script src="./semester_project.js"></script>
 </head>
 
 <body>
+    <form action="action_page.php" style="border:1px solid #ccc">
+        <div class="center">
+            <h1>Flo's & Friends login function</h1>
+            <p>Enter your login details</p>
+            <hr>
+            
+            <input type="text" name="username" id="username" placeholder="Username" required/>
 
-    <div class="center">
-        <h1>Flo's & Friends login function</h1>
-        
-        <input type="text" name="username" id="username"/>
-        <input type="password" name="password" id="password" />
-        <input type="button" value="Login" name="submit" id="submit" />
-        <span id="loginResult"></span>
-        
-    </div>
+            <input type="password" name="password" id="password" placeholder="Password" required/>
+            <input class="loginButton" type="button" value="Login" name="submit" id="submit" required/>
+
+            <hr>
+
+            <button type="button" class="forgetPassword">Forgot password</button>
+            
+            <script src="./semester_project.js"></script>
+        </div>
+
+             
+    </form>
 </body> 
 </html>
+
