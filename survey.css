@@ -1,37 +1,37 @@
 body {
-    font-family: sans-serif;
-    background: green;
-  }
-  h2 {
-    margin: 5px 0;
-  }
-  #wrapper {
-    width: 600px;
-    margin: 0 auto;
-    background: white;
-    padding: 10px 15px;
-    border-radius: 10px;
-  }
-  input {
-    margin: 5px 10px;
-  }
-  button {
-    font-size: 18px;
-    padding: 10px;
-    margin: 20px 0;
-    color: white;
-    border: 0;
-    border-radius: 10px;
-    border-bottom: 3px solid #333;
-  }
-  #submit {
-    background: green;
-  }
-  #reset {
-    background: red;
-  }
-  #answer {
-    border: 1px dashed #ccc;
-    background: #eee;
-    padding: 10px;
-  }
+  font-family: sans-serif;
+  background: rgb(245, 245, 245);
+}
+h2 {
+  margin: 5px 0;
+}
+#wrapper {
+  width: 600px;
+  margin: 0 auto;
+  background: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+}
+input {
+  margin: 5px 10px;
+}
+button {
+  font-size: 18px;
+  padding: 10px;
+  margin: 20px 0;
+  color: black;
+  border: 0;
+  border-radius: 10px;
+  border-bottom: 3px solid #333;
+}
+#submit {
+  background: lightgray;
+}
+#reset {
+  background: rgb(240, 128, 128);
+}
+#answer {
+  border: 1px dashed #ccc;
+  background: #eee;
+  padding: 10px;
+}
