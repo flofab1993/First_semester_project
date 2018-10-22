@@ -3,22 +3,14 @@ function saveInput() { // Save Input in local storage
   // Save answers to variables
   var nat = document.forms["input"]["country"].value;
   var cph = document.forms["input"]["district"].value;
-  var gen = null;
-  var rel = null;
-  var eye = null;
-  var veg = null;
-  var bow = null;
-  var pet = null;
-  var pop = null;
-  var toc = null;
-
-  var radios = document.getElementsByTagName("input");
-
-  for(let i = 0; i < radios.lenght; i++) {
-    if(radios[i].type == "radio" && radios[i].checked) {
-      radios[i] = document.querySelector('input[name=radios[i].name]:checked').value
-    }
-  }
+  var gen = document.querySelector('input[name=gender]:checked').value;
+  var rel = document.querySelector('input[name=relationship]:checked').value;
+  var eye = document.querySelector('input[name=eye_color]:checked').value;
+  var veg = document.querySelector('input[name=food]:checked').value;
+  var bow = document.querySelector('input[name=drinks]:checked').value;
+  var pet = document.querySelector('input[name=pet]:checked').value;
+  var pop = document.querySelector('input[name=pizzaPasta]:checked').value;
+  var toc = document.querySelector('input[name=hotdrinks]:checked').value;
 
   var user = { // Create an object named user from input 
     nationality: nat,
@@ -33,33 +25,18 @@ function saveInput() { // Save Input in local storage
     hotDrink: toc,
   }
 
-  if (nat!=="" && // Check if everything is filled out
-      gen!==null && 
-      rel!==null && 
-      cph!=="" && 
-      eye!==null && 
-      veg!==null && 
-      bow!==null && 
-      pet!==null && 
-      pop!==null && 
-      toc!==null) {
+  var id = gen + (new Date()).getTime(); // Create id for user based on gender + time in milliseconds from 01/01/1970
 
-        var id = gen + (new Date()).getTime(); // Create id for user based on gender + time in milliseconds from 01/01/1970
-    
-        localStorage.setItem(id, JSON.stringify(user)); // Store user object as string with JSON
-
-  } else { // Message if value is missing
-    
-    alert("Please fill out the complete form!")
-  }
+  localStorage.setItem(id, JSON.stringify(user)); // Store user object as string with JSON
 }
 
 function resetAnswers() { //Resets the radio buttons
   
-  var answer = document.getElementsByName("gender");
-  
-  for(var i=0;i<answer.length;i++) {
-      answer[i].checked = false;
-  }
+  var radios = document.getElementsByTagName("input");
 
+  for(var i=0; i<radios.length; i++) {
+      if(radios[i].type == "radio") {
+        radios[i].checked = false;
+      }
+  }
 }
