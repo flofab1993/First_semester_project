@@ -1,3 +1,6 @@
+// Count number of students that have taken the survey
+document.getElementById("userCounter").innerHTML = "We have asked " + localStorage.length + " E-Business students.";
+
 function saveInput() { // Save Input in local storage
   
   // Save answers to variables
@@ -79,12 +82,24 @@ function drawCountryChart() {
 
     rankedCntrs.sort(function(a,b){ // Sort array descending by the amount a country occurs
         return b[1] - a[1];
-    }).unshift(["Country", "Number"]); // Add labels
+    }); 
 
-    var data = google.visualization.arrayToDataTable(rankedCntrs); // Make pie chart of nationalities with the array rankedCntrs
+    // We just want to display the top 5 recurring countries in the dataset, therefore we will further adjust rankedCntrs
+    var otherCntrs = 0; // Empty variable for the total amount of countries outside the top five
+
+    for(i=5; i<rankedCntrs.length; i++) { // Start from 5 and loop through rankedCntrs and add values to otherCntrs
+      otherCntrs += rankedCntrs[i][1]; // We only want elements from the second column
+    }
+    
+    // Adjusting rankedCntrs to go into pie chart
+    rankedCntrs.splice(4,rankedCntrs.length-5); // Remove every element but the first five
+    rankedCntrs.unshift(['Country','Number']) // Add labels
+    rankedCntrs.push(['Other',otherCntrs]); // Add total of other countries
+    
+    var data = google.visualization.arrayToDataTable(rankedCntrs); // Make pie chart
 
     var options = { // Pie chart title
-        title: 'This is where your fellow students are from:'
+        title: 'This is where your fellow students are from:',
     };
     
     var chart = new google.visualization.PieChart(document.getElementById('countryChart')); // Reference to pie chart in .html file
@@ -203,7 +218,7 @@ function drawCPHChart() {
       title: 'This is where your fellow students live:'
   };
   
-  var chart = new google.visualization.PieChart(document.getElementById('cphChart')); // Reference to pie chart in .html file
+  var chart = new google.visualization.BarChart(document.getElementById('cphChart')); // Reference to pie chart in .html file
   chart.draw(data, options);
 }
 
@@ -430,7 +445,7 @@ function drawCoffeeChart() {
   ])
 
   var options = {
-    title: 'What gets you fellow students up in the morning?'
+    title: 'What gets your fellow students up in the morning?'
   };
 
   var chart = new google.visualization.PieChart(document.getElementById('coffeeChart'));
