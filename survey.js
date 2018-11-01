@@ -2,10 +2,24 @@
 document.getElementById("userCounter").innerHTML = "We have asked " + localStorage.length + " E-Business students.";
 
 function saveInput() { // Save Input in local storage
-  
+
+  // Calculate Age
+  // Get the values for day, month and year
+  var birthDay = document.getElementById("day").value;
+  var birthMonth = document.getElementById("month").value;
+  var birthYear = document.getElementById("year").value;
+
+  // Create a date object from the datestring (YYYY-MM-DD)
+  var birthDate = new Date(birthYear + "-" + birthMonth + "-" + birthDay)
+
+  var ageDiff = Date.now() - birthDate.getTime(); // Difference in milliseconds between today and the date of birth
+  var ageDate = new Date(ageDiff); // date after ageDiff milliseconds from 01/01/1970
+
+  var age = Math.abs(ageDate.getUTCFullYear() - 1970); // The year of ageDate - 1970 gives us the exact age
+
   // Save answers to variables
-  var nat = document.forms["input"]["country"].value;
-  var cph = document.forms["input"]["district"].value;
+  var nat = document.getElementById("country").value; 
+  var cph = document.getElementById("district").value;
   var gen = document.querySelector('input[name=gender]:checked').value;
   var rel = document.querySelector('input[name=relationship]:checked').value;
   var eye = document.querySelector('input[name=eye_color]:checked').value;
@@ -16,6 +30,7 @@ function saveInput() { // Save Input in local storage
   var toc = document.querySelector('input[name=hotdrinks]:checked').value;
 
   var user = { // Create an object named user from input 
+    age: age,
     nationality: nat,
     gender: gen,
     status: rel,
@@ -32,7 +47,7 @@ function saveInput() { // Save Input in local storage
 
   localStorage.setItem(id, JSON.stringify(user)); // Store user object as string with JSON
 }
-
+/* 
 function resetAnswers() { //Resets the radio buttons
   
   var radios = document.getElementsByTagName("input");
@@ -42,7 +57,7 @@ function resetAnswers() { //Resets the radio buttons
         radios[i].checked = false;
       }
   }
-}
+} */
 
 // Load Google charts
 google.charts.load('current', {'packages':['corechart']});
@@ -57,133 +72,152 @@ google.charts.setOnLoadCallback(drawPetChart);
 google.charts.setOnLoadCallback(drawPizzaChart);
 google.charts.setOnLoadCallback(drawCoffeeChart);
 
+// Display average age
+var ageArr = [];
+
+for (let i=0; i<localStorage.length; i++) {
+  let usr = JSON.parse(localStorage.getItem(localStorage.key(i)));
+  if (Number.isInteger(usr.age)) { // Add age to ageArr only if value is an integer
+    ageArr.push(usr.age);
+  }
+}
+
+// Get sum of all ages
+var ageSum = 0
+for(let i=0; i<ageArr.length; i++) {
+  ageSum += ageArr[i];
+}
+
+// Calculate average age
+var averageAge = ageSum/ageArr.length
+
+// Display in HTML with the average Age rounded to two decimals
+document.getElementById("avgAge").innerHTML = "The average age of your fellow students is " + Math.round(averageAge * 100)/100 + " years"
+
 // Nationality chart
 function drawCountryChart() {
+  // Create array containing the value for nationality from each user
+  let countryArr = [];
 
-    // Create array containing the value for nationality from each user
-    let countryArr = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    let usr = JSON.parse(localStorage.getItem(localStorage.key(i)));
+    countryArr.push(usr.nationality);
+  }
+  
+  // Create object listing the number of times each country occurs
+  var numberOfCountry = {};
 
-    for(let i = 0; i < localStorage.length; i++) {
-        let usr = JSON.parse(localStorage.getItem(localStorage.key(i)));
-        countryArr.push(usr.nationality);
-    }
-    
-    // Create object listing the number of times each country occurs
-    var numberOfCountry = {};
+  countryArr.forEach(function(n) {  // Creates a property for each country with its amount as the value
+    numberOfCountry[n] = (numberOfCountry[n] || 0) + 1; 
+  });
 
-    countryArr.forEach(function(n) {  // Creates a property for each country with its amount as the value
-        numberOfCountry[n] = (numberOfCountry[n] || 0) + 1; 
-    });
+  var rankedCntrs = []; // Create 2-dimensional array from object numberOfCountry
+  for(let x in numberOfCountry){
+    rankedCntrs.push([x, numberOfCountry[x]])
+  }
 
-    var rankedCntrs = []; // Create 2-dimensional array from object numberOfCountry
-    for(let x in numberOfCountry){
-        rankedCntrs.push([x, numberOfCountry[x]])
-    }
+  rankedCntrs.sort(function(a,b){ // Sort array descending by the amount a country occurs
+    return b[1] - a[1];
+  }); 
 
-    rankedCntrs.sort(function(a,b){ // Sort array descending by the amount a country occurs
-        return b[1] - a[1];
-    }); 
+  // We just want to display the top 5 recurring countries in the dataset, therefore we will further adjust rankedCntrs
+  var otherCntrs = 0; // Empty variable for the total amount of countries outside the top five
 
-    // We just want to display the top 5 recurring countries in the dataset, therefore we will further adjust rankedCntrs
-    var otherCntrs = 0; // Empty variable for the total amount of countries outside the top five
+  for(i=5; i<rankedCntrs.length; i++) { // Start from 5 and loop through rankedCntrs and add values to otherCntrs
+    otherCntrs += rankedCntrs[i][1]; // We only want elements from the second column
+  }
+  
+  // Adjusting rankedCntrs to go into pie chart
+  rankedCntrs.splice(4,rankedCntrs.length-5); // Remove every element but the first five
+  rankedCntrs.unshift(['Country','Number']) // Add labels
+  rankedCntrs.push(['Other',otherCntrs]); // Add total of other countries
+  
+  var data = google.visualization.arrayToDataTable(rankedCntrs); // Make pie chart
 
-    for(i=5; i<rankedCntrs.length; i++) { // Start from 5 and loop through rankedCntrs and add values to otherCntrs
-      otherCntrs += rankedCntrs[i][1]; // We only want elements from the second column
-    }
-    
-    // Adjusting rankedCntrs to go into pie chart
-    rankedCntrs.splice(4,rankedCntrs.length-5); // Remove every element but the first five
-    rankedCntrs.unshift(['Country','Number']) // Add labels
-    rankedCntrs.push(['Other',otherCntrs]); // Add total of other countries
-    
-    var data = google.visualization.arrayToDataTable(rankedCntrs); // Make pie chart
-
-    var options = { // Pie chart title
-        title: 'This is where your fellow students are from:',
-    };
-    
-    var chart = new google.visualization.PieChart(document.getElementById('countryChart')); // Reference to pie chart in .html file
-    chart.draw(data, options);
+  var options = { // Pie chart title
+    title: 'This is where your fellow students are from:',
+  };
+  
+  var chart = new google.visualization.PieChart(document.getElementById('countryChart')); // Reference to pie chart in .html file
+  chart.draw(data, options);
 }
 
 // Gender chart
 function drawGenderChart() {
     
-    // Create array with all values for gender
-    var genderArr = [];
+  // Create array with all values for gender
+  var genderArr = [];
 
-    for(let i=0; i<localStorage.length; i++){
-    let usr = JSON.parse(localStorage.getItem(localStorage.key(i)));
-    genderArr.push(usr.gender);
+  for(let i=0; i<localStorage.length; i++){
+  let usr = JSON.parse(localStorage.getItem(localStorage.key(i)));
+  genderArr.push(usr.gender);
+  }
+
+  // The number of times each gender occurs
+  var nrFemales = 0;
+  var nrMales = 0;
+
+  for(let i=0; i<genderArr.length; i++){ 
+    if (genderArr[i] == "female") {
+      nrFemales++;
+    }else if (genderArr[i] == "male") {
+      nrMales++;
     }
+  }
 
-    // The number of times each gender occurs
-    var nrFemales = 0;
-    var nrMales = 0;
-
-    for(let i=0; i<genderArr.length; i++){
-
-    if(genderArr[i] == "female") {
-        nrFemales++;
-    }else if(genderArr[i] == "male") {
-        nrMales++;
-    }
-    }
-
-    var data = google.visualization.arrayToDataTable([
+  var data = google.visualization.arrayToDataTable([
     ['Gender', 'Number'],
     ['Female', nrFemales],
     ['Male', nrMales]
-    ]);
+  ]);
 
-    var options = {
+  var options = {
     title: 'This is the gender ratio of your year:'
-    };
+  };
 
-    var chart = new google.visualization.PieChart(document.getElementById('genderChart'));
+  var chart = new google.visualization.PieChart(document.getElementById('genderChart'));
 
-    chart.draw(data, options);
+  chart.draw(data, options);
 }
 
 // Relationship status chart
-
 function drawStatusChart() {
 
-    var statusArr = [];
+  var statusArr = [];
 
-    for(let i=0; i<localStorage.length; i++) {
-        let usr = JSON.parse(localStorage.getItem(localStorage.key(i)));
-        statusArr.push(usr.status);
+  for(let i=0; i<localStorage.length; i++) {
+    let usr = JSON.parse(localStorage.getItem(localStorage.key(i)));
+    statusArr.push(usr.status);
+  }
+
+  var nrSingle = 0;
+  var nrTaken = 0;
+  var nrMarried = 0;
+
+  for(let i=0; i<statusArr.length; i++) {
+    if (statusArr[i]=='single') {
+      nrSingle++;
+    } else if (statusArr[i]=='taken') {
+      nrTaken++;
+    } else if (statusArr[i]=='married') {
+      nrMarried++;
     }
+  }
 
-    var nrSingle = 0;
-    var nrTaken = 0;
-    var nrMarried = 0;
+  var data = google.visualization.arrayToDataTable([
+    ['Status', 'Number'],
+    ['Single', nrSingle],
+    ['In a Relationship', nrTaken],
+    ['Married', nrMarried]
+  ]);
 
-    for(let i=0; i<statusArr.length; i++) {
-        if (statusArr[i]=='single') {
-            nrSingle++;
-        } else if (statusArr[i]=='taken') {
-            nrTaken++;
-        } else if (statusArr[i]=='married') {
-            nrMarried++;
-        }
-    }
+  var options = {
+    title: 'This is the relationship status of people in your year:'
+    };
 
-    var data = google.visualization.arrayToDataTable([
-        ['Status', 'Number'],
-        ['Single', nrSingle],
-        ['In a Relationship', nrTaken],
-        ['Married', nrMarried]
-    ]);
+    var chart = new google.visualization.PieChart(document.getElementById('statusChart'));
 
-    var options = {
-        title: 'This is the relationship status of people in your year:'
-        };
-    
-        var chart = new google.visualization.PieChart(document.getElementById('statusChart'));
-    
-        chart.draw(data, options);
+    chart.draw(data, options);
 }
 
 function drawCPHChart() {
@@ -192,30 +226,30 @@ function drawCPHChart() {
   let cphArr = [];
 
   for(let i = 0; i < localStorage.length; i++) {
-      let usr = JSON.parse(localStorage.getItem(localStorage.key(i)));
-      cphArr.push(usr.district);
+    let usr = JSON.parse(localStorage.getItem(localStorage.key(i)));
+    cphArr.push(usr.district);
   }
   
   // Create object listing the number of times each district occurs
   var numberOfDistrict = {};
 
   cphArr.forEach(function(n) {  // Creates a property for each district with its amount as the value
-      numberOfDistrict[n] = (numberOfDistrict[n] || 0) + 1; 
+    numberOfDistrict[n] = (numberOfDistrict[n] || 0) + 1; 
   });
 
   var rankedDstrcts = []; // Create 2-dimensional array from object numberOfDistricts
   for(let x in numberOfDistrict){
-      rankedDstrcts.push([x, numberOfDistrict[x]])
+    rankedDstrcts.push([x, numberOfDistrict[x]])
   }
 
   rankedDstrcts.sort(function(a,b){ // Sort array descending by the amount a district occurs
-      return b[1] - a[1];
+    return b[1] - a[1];
   }).unshift(["District", "Number"]); // Add labels
 
   var data = google.visualization.arrayToDataTable(rankedDstrcts); // Make pie chart of nationalities with the array rankedCntrs
 
   var options = { // Pie chart title
-      title: 'This is where your fellow students live:'
+    title: 'This is where your fellow students live:'
   };
   
   var chart = new google.visualization.BarChart(document.getElementById('cphChart')); // Reference to pie chart in .html file
@@ -290,11 +324,11 @@ function drawVeggieChart() {
 
   for(let i=0; i<veggieArr.length; i++) {
     if (veggieArr[i]=='none') {
-        nrNone++;
+      nrNone++;
     } else if (veggieArr[i]=='vegetarian') {
-        nrVegetarian++;
+      nrVegetarian++;
     } else if (veggieArr[i]=='vegan') {
-        nrVegan++;
+      nrVegan++;
     }
   }
 
@@ -318,33 +352,33 @@ function drawDrinksChart() {
   var drinksArr = [];
 
   for(let i=0; i<localStorage.length; i++) {
-      let usr = JSON.parse(localStorage.getItem(localStorage.key(i)));
-      drinksArr.push(usr.drinks);
+    let usr = JSON.parse(localStorage.getItem(localStorage.key(i)));
+    drinksArr.push(usr.drinks);
   }
 
   var nrBeer = 0;
   var nrWine = 0;
 
   for(let i=0; i<drinksArr.length; i++) {
-      if (drinksArr[i]=='beer') {
-          nrBeer++;
-      } else if (drinksArr[i]=='wine') {
-          nrWine++;
-      }
+    if (drinksArr[i]=='beer') {
+      nrBeer++;
+    } else if (drinksArr[i]=='wine') {
+      nrWine++;
+    }
   }
 
   var data = google.visualization.arrayToDataTable([
-      ['Drink', 'Number'],
-      ['Beer', nrBeer],
-      ['Wine', nrWine]
+    ['Drink', 'Number'],
+    ['Beer', nrBeer],
+    ['Wine', nrWine]
   ]);
 
   var options = {
-      title: 'What do your fellow students drink?'
-      };
-  
-      var chart = new google.visualization.PieChart(document.getElementById('drinksChart'));
-      chart.draw(data, options);
+    title: 'What do your fellow students drink?'
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('drinksChart'));
+    chart.draw(data, options);
 }
 
 // Dog or Cat chart
