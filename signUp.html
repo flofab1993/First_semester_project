@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login function</title>
+    <link href="style.css" rel="stylesheet">
+
+</head>
+
+<body>
+    <div class="container" id="signUp">
+        <h1>Welcome!</h1>
+        <form id="login" action="survey.html" onsubmit="return signUp()"> 
+            <p>Sign up with your CBS email adress<p>
+            <input type="text" id="newUser" placeholder="Your CBS email address..." required><br>
+            <input type="password" id="newPassword" placeholder="Password" required><br>
+            <input type="password" id="confirmPassword" placeholder="Confirm password" required><br>
+            <button type="submit" id="signUpButton">Register</button>
+        </form>
+        <p>Already have an account? <a href="signin.html">Log in.</a></p>
+    </div>
+
+    <script src="survey.js"></script>
+</body> 
+</html>
+

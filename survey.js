@@ -1,3 +1,39 @@
+// New user registration
+
+function signUp() {
+  
+  // Read user input
+  let username = document.getElementById("newUser").value;
+  let password = document.getElementById("newPassword").value;
+  let confirmPw = document.getElementById("confirmPassword").value;
+
+  // Check if user already exists and if passwords match
+  if(localStorage.getItem(username) != null) {
+    alert("User already exists!")
+    return false;
+  } else if (password != confirmPw) {
+    alert("Your passwords don't match!")
+    return false;
+  } else {
+    localStorage.setItem(username, password);
+  }
+}
+
+function signIn() {
+  
+  // Read user input
+  let username = document.getElementById("username").value;
+  let password = document.getElementById("password").value;
+
+  if (localStorage.getItem(username) === null) { // Check if username exists
+    alert("The user doesn't exist")
+    return false;
+  } else if (localStorage.getItem(username) != password) { // CHeck if username and password match
+    alert("Wrong password!")
+    return false;
+  }
+}
+
 // Count number of students that have taken the survey
 document.getElementById("userCounter").innerHTML = "We have asked " + localStorage.length + " E-Business students.";
 
@@ -9,7 +45,7 @@ function saveInput() { // Save Input in local storage
   var birthMonth = document.getElementById("month").value;
   var birthYear = document.getElementById("year").value;
 
-  // Create a date object from the datestring (YYYY-MM-DD)
+  // Create a date object from a datestring (YYYY-MM-DD)
   var birthDate = new Date(birthYear + "-" + birthMonth + "-" + birthDay)
 
   var ageDiff = Date.now() - birthDate.getTime(); // Difference in milliseconds between today and the date of birth
@@ -485,3 +521,5 @@ function drawCoffeeChart() {
   var chart = new google.visualization.PieChart(document.getElementById('coffeeChart'));
   chart.draw(data,options);
 }
+
+
