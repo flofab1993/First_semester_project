@@ -1,25 +1,28 @@
-// New user registration
-
-function signUp() {
+function signUp() { // New user registration
   
   // Read user input
   let username = document.getElementById("newUser").value;
   let password = document.getElementById("newPassword").value;
   let confirmPw = document.getElementById("confirmPassword").value;
 
-  // Check if user already exists and if passwords match
-  if(localStorage.getItem(username) != null) {
-    alert("User already exists!")
+  var emailValid = /\w{4}1\d\w{2}@student.cbs.dk/; // Regular expression for a CBS mail adress no older than from 2010
+
+  // Validate Input
+  if(!emailValid.test(username)) { // Check if username is a CBS mail adress
+    alert("Username must be a CBS email adress!");
     return false;
-  } else if (password != confirmPw) {
-    alert("Your passwords don't match!")
+  } else if (localStorage.getItem(username) != null) { // Check if user already exists
+    alert("User already exists!");
+    return false;
+  } else if (password != confirmPw) { // Check if password confirmation matches
+    alert("Your passwords don't match!");
     return false;
   } else {
-    localStorage.setItem(username, password);
+    localStorage.setItem(username, password); // Add user to local storage
   }
 }
 
-function signIn() {
+function signIn() { // Login function
   
   // Read user input
   let username = document.getElementById("username").value;
@@ -44,6 +47,13 @@ function saveInput() { // Save Input in local storage
   var birthDay = document.getElementById("day").value;
   var birthMonth = document.getElementById("month").value;
   var birthYear = document.getElementById("year").value;
+
+  // Make sure date is valid (e.g. exclude 31st for some months)
+  var thirtyDayMonths = ["02","04","06","09","11"];
+  if(birthDay === "31" && thirtyDayMonths.includes(birthMonth) || (birthDay === "30" && birthMonth === "02")){
+    alert("Invalid birthday!");
+    return false; // Alert when date is invalid and stay at form
+  }
 
   // Create a date object from a datestring (YYYY-MM-DD)
   var birthDate = new Date(birthYear + "-" + birthMonth + "-" + birthDay)
@@ -83,17 +93,6 @@ function saveInput() { // Save Input in local storage
 
   localStorage.setItem(id, JSON.stringify(user)); // Store user object as string with JSON
 }
-/* 
-function resetAnswers() { //Resets the radio buttons
-  
-  var radios = document.getElementsByTagName("input");
-
-  for(var i=0; i<radios.length; i++) {
-      if(radios[i].type == "radio") {
-        radios[i].checked = false;
-      }
-  }
-} */
 
 // Load Google charts
 google.charts.load('current', {'packages':['corechart']});

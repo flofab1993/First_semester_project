@@ -12,7 +12,7 @@
     <h1 align="center">Get to know your peers!</h1>
     <p>Take this questionnaire to find out!</p>
       
-    <form id="input" name="input" action="pie_charts.html">
+    <form id="input" name="input" onsubmit="return saveInput()"action="pie_charts.html">
       
       <!-- Birthday -->
       <h2>When were you born?</h2>
@@ -465,7 +465,7 @@
         Tea
       </label><br />
       
-      <button type="submit" id="submit" onclick="saveInput()">Submit</button>
+      <button type="submit" id="submit" >Submit</button>
       <button type="reset" id="reset" onclick="resetAnswers()">Reset</button>
     </form>
 
