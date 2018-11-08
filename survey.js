@@ -94,18 +94,99 @@ function saveInput() { // Save Input in local storage
   localStorage.setItem(id, JSON.stringify(user)); // Store user object as string with JSON
 }
 
-// Load Google charts
 google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(drawPieChart);
 google.charts.setOnLoadCallback(drawCountryChart);
-google.charts.setOnLoadCallback(drawGenderChart);
-google.charts.setOnLoadCallback(drawStatusChart);
 google.charts.setOnLoadCallback(drawCPHChart);
-google.charts.setOnLoadCallback(drawVeggieChart);
-google.charts.setOnLoadCallback(drawDrinksChart);
-google.charts.setOnLoadCallback(drawEyeChart);
-google.charts.setOnLoadCallback(drawPetChart);
-google.charts.setOnLoadCallback(drawPizzaChart);
-google.charts.setOnLoadCallback(drawCoffeeChart);
+
+// Class to draw charts with up to 5 values
+class OrChoice {
+
+  constructor(name, id, value1, value2, value3, value4, value5) {
+    this.name = name;
+    this.id = id;
+    this.value1 = value1;
+    this.value2 = value2;
+    this.value3 = value3;
+    this.value4 = value4;
+    this.value5 = value5;
+  }
+
+  drawChart() {
+    let valueArr = [];
+
+      for (let i=0; i<localStorage.length; i++) {
+        let usr = JSON.parse(localStorage.getItem(localStorage.key(i)));
+        valueArr.push(usr[this.name]);
+      }
+
+      let value1Nr = 0;
+      let value2Nr = 0;
+      let value3Nr = 0;
+      let value4Nr = 0;
+      let value5Nr = 0;
+
+      for (let i=0; i<valueArr.length; i++) {
+
+        switch (valueArr[i]) {
+          case this.value1:
+            value1Nr++
+            break;
+          case this.value2:
+            value2Nr++
+            break;
+          case this.value3:
+            value3Nr++
+            break;
+          case this.value4:
+            value4Nr++
+            break;
+          case this.value5:
+            value5Nr++
+            break;
+        }
+      }
+
+      var data = google.visualization.arrayToDataTable([
+        [this.name, 'Number'],
+        [this.value1, value1Nr],
+        [this.value2, value2Nr],
+        [this.value3, value3Nr],
+        [this.value4, value4Nr],
+        [this.value5, value5Nr]
+      ])
+
+      var options = {
+          /* title: 'This is a pie chart:' */
+      };
+
+      var chart = new google.visualization.PieChart(document.getElementById(this.id));
+
+      chart.draw(data, options);
+  }
+}
+
+// Create instanceses of the OrClass to build Pie Charts
+var genders    = new OrChoice('gender','genderChart','female','male');
+var relStatus  = new OrChoice('status','statusChart','single','taken','married');
+var eyeColor   = new OrChoice('eye_color','eyeChart','brown','blue','green','grey','Other');
+var veggie     = new OrChoice('eating','veggieChart','none','vegetarian','vegan');
+var beerWine   = new OrChoice('drinks','drinksChart','beer','wine');
+var dogCat     = new OrChoice('pet','petChart','dog','cat');
+var pizzaPasta = new OrChoice('food','pizzaChart','pizza','pasta');
+var coffeeTea  = new OrChoice('hotDrink','coffeeChart','coffee','tea');
+
+// Function to load in callback with google's API
+function drawPieChart() {
+    genders.drawChart();
+    relStatus.drawChart();
+    eyeColor.drawChart();
+    veggie.drawChart();
+    beerWine.drawChart();
+    dogCat.drawChart();
+    pizzaPasta.drawChart();
+    coffeeTea.drawChart();
+}
 
 // Display average age
 var ageArr = [];
@@ -177,84 +258,7 @@ function drawCountryChart() {
   chart.draw(data, options);
 }
 
-// Gender chart
-function drawGenderChart() {
-    
-  // Create array with all values for gender
-  var genderArr = [];
-
-  for(let i=0; i<localStorage.length; i++){
-  let usr = JSON.parse(localStorage.getItem(localStorage.key(i)));
-  genderArr.push(usr.gender);
-  }
-
-  // The number of times each gender occurs
-  var nrFemales = 0;
-  var nrMales = 0;
-
-  for(let i=0; i<genderArr.length; i++){ 
-    if (genderArr[i] == "female") {
-      nrFemales++;
-    }else if (genderArr[i] == "male") {
-      nrMales++;
-    }
-  }
-
-  var data = google.visualization.arrayToDataTable([
-    ['Gender', 'Number'],
-    ['Female', nrFemales],
-    ['Male', nrMales]
-  ]);
-
-  var options = {
-    title: 'This is the gender ratio of your year:'
-  };
-
-  var chart = new google.visualization.PieChart(document.getElementById('genderChart'));
-
-  chart.draw(data, options);
-}
-
-// Relationship status chart
-function drawStatusChart() {
-
-  var statusArr = [];
-
-  for(let i=0; i<localStorage.length; i++) {
-    let usr = JSON.parse(localStorage.getItem(localStorage.key(i)));
-    statusArr.push(usr.status);
-  }
-
-  var nrSingle = 0;
-  var nrTaken = 0;
-  var nrMarried = 0;
-
-  for(let i=0; i<statusArr.length; i++) {
-    if (statusArr[i]=='single') {
-      nrSingle++;
-    } else if (statusArr[i]=='taken') {
-      nrTaken++;
-    } else if (statusArr[i]=='married') {
-      nrMarried++;
-    }
-  }
-
-  var data = google.visualization.arrayToDataTable([
-    ['Status', 'Number'],
-    ['Single', nrSingle],
-    ['In a Relationship', nrTaken],
-    ['Married', nrMarried]
-  ]);
-
-  var options = {
-    title: 'This is the relationship status of people in your year:'
-    };
-
-    var chart = new google.visualization.PieChart(document.getElementById('statusChart'));
-
-    chart.draw(data, options);
-}
-
+// Draw charts for CPH districts
 function drawCPHChart() {
   
   // Create array containing the district from each user
@@ -290,235 +294,3 @@ function drawCPHChart() {
   var chart = new google.visualization.BarChart(document.getElementById('cphChart')); // Reference to pie chart in .html file
   chart.draw(data, options);
 }
-
-// Chart for eye colors
-
-function drawEyeChart() {
-  
-  var eyeclrArr = [];
-
-  for(let i = 0; i<localStorage.length; i++) {
-    let usr = JSON.parse(localStorage.getItem(localStorage.key(i)));
-    eyeclrArr.push(usr.eye_color);
-  }
-  var nrBrown = 0;
-  var nrBlue = 0;
-  var nrGreen = 0;
-  var nrGrey = 0;
-  var nrOther = 0;
-
-  for(let i=0; i<eyeclrArr.length; i++) {
-    switch(eyeclrArr[i]) {
-      case 'brown':
-        nrBrown++;
-        break;
-      case 'blue':
-        nrBlue++;
-        break;
-      case 'green':
-        nrGreen++;
-        break;
-      case 'grey':
-        nrGrey++;
-        break;
-      case 'other':
-        nrOther++;
-        break;
-    }
-  }
-
-  var data = google.visualization.arrayToDataTable([
-    ['Name', 'Color'],
-    ['Brown', nrBrown],
-    ['Blue', nrBlue],
-    ['Green', nrGreen],
-    ['Grey', nrGrey],
-    ['Other', nrOther]
-  ])
-
-  var options = {
-    title: 'What eye color do your fellow students have?'
-  };
-
-  var chart = new google.visualization.PieChart(document.getElementById('eyeChart'));
-  chart.draw(data, options);
-  
-}
-// Chart for eating habits
-function drawVeggieChart() {
-  var veggieArr = [];
-
-  for(let i=0; i<localStorage.length; i++) {
-    let usr = JSON.parse(localStorage.getItem(localStorage.key(i)));
-    veggieArr.push(usr.eating);
-  }
-
-  var nrNone = 0;
-  var nrVegetarian = 0;
-  var nrVegan = 0;
-
-  for(let i=0; i<veggieArr.length; i++) {
-    if (veggieArr[i]=='none') {
-      nrNone++;
-    } else if (veggieArr[i]=='vegetarian') {
-      nrVegetarian++;
-    } else if (veggieArr[i]=='vegan') {
-      nrVegan++;
-    }
-  }
-
-  var data = google.visualization.arrayToDataTable([
-    ['Habit', 'Number'],
-    ['None', nrNone],
-    ['Vegetarian', nrVegetarian],
-    ['Vegan', nrVegan]
-  ]);
-
-  var options = {
-    title: 'Are your fellow students vegetarian or even vegan?'
-    };
-
-    var chart = new google.visualization.PieChart(document.getElementById('veggieChart'));
-    chart.draw(data, options);
-}
-
-// Drinks chart
-function drawDrinksChart() {
-  var drinksArr = [];
-
-  for(let i=0; i<localStorage.length; i++) {
-    let usr = JSON.parse(localStorage.getItem(localStorage.key(i)));
-    drinksArr.push(usr.drinks);
-  }
-
-  var nrBeer = 0;
-  var nrWine = 0;
-
-  for(let i=0; i<drinksArr.length; i++) {
-    if (drinksArr[i]=='beer') {
-      nrBeer++;
-    } else if (drinksArr[i]=='wine') {
-      nrWine++;
-    }
-  }
-
-  var data = google.visualization.arrayToDataTable([
-    ['Drink', 'Number'],
-    ['Beer', nrBeer],
-    ['Wine', nrWine]
-  ]);
-
-  var options = {
-    title: 'What do your fellow students drink?'
-    };
-
-    var chart = new google.visualization.PieChart(document.getElementById('drinksChart'));
-    chart.draw(data, options);
-}
-
-// Dog or Cat chart
-function drawPetChart() {
-
-  var petArr = [];
-
-  for(let i=0; i<localStorage.length; i++) {
-    usr = JSON.parse(localStorage.getItem(localStorage.key(i)));
-    petArr.push(usr.pet);
-  }
-
-var nrDog = 0;
-var nrCat = 0;
-
-for(let i=0; i<petArr.length; i++) {
-  if(petArr[i] == 'dog') {
-    nrDog++;
-  } else if (petArr[i] == 'cat') {
-    nrCat++;
-  }
-}
-
-var data = google.visualization.arrayToDataTable([
-  ['Pet', 'Number'],
-  ['Dog', nrDog],
-  ['Cat', nrCat]
-]);
-
-var options = {
-  title: 'What pet do your fellow students prefer?'
-  };
-
-  var chart = new google.visualization.PieChart(document.getElementById('petChart'));
-  chart.draw(data, options);
-}
-
-// Draw Pizza or Pasta chart
-function drawPizzaChart() {
-
-  var pizzaArr=[];
-
-  for(let i=0; i<localStorage.length; i++) {
-    usr = JSON.parse(localStorage.getItem(localStorage.key(i)));
-    pizzaArr.push(usr.food);
-  }
-
-  var nrPizza = 0;
-  var nrPasta = 0;
-
-  for(let i=0; i < pizzaArr.length; i++) {
-    if (pizzaArr[i] == 'pizza') {
-      nrPizza++;
-    } else if (pizzaArr[i] == 'pasta'){
-      nrPasta++;
-    }
-  }
-
-  var data = google.visualization.arrayToDataTable([
-    ['Dish','Number'],
-    ['Pizza', nrPizza],
-    ['Pasta', nrPasta]
-  ])
-
-  var options = {
-    title: 'Is your year more into pizza or pasta?'
-  };
-
-  var chart = new google.visualization.PieChart(document.getElementById('pizzaChart'));
-  chart.draw(data,options);
-}
-
-// Draw Coffee or Tea chart
-function drawCoffeeChart() {
-
-  var coffeeArr=[];
-
-  for(let i=0; i<localStorage.length; i++) {
-    usr = JSON.parse(localStorage.getItem(localStorage.key(i)));
-    coffeeArr.push(usr.hotDrink);
-  }
-
-  var nrCoffee = 0;
-  var nrTea = 0;
-
-  for(let i=0; i < coffeeArr.length; i++) {
-    if (coffeeArr[i] == 'coffee') {
-      nrCoffee++;
-    } else if (coffeeArr[i] == 'tea'){
-      nrTea++;
-    }
-  }
-
-  var data = google.visualization.arrayToDataTable([
-    ['Hot drink','Number'],
-    ['Coffee', nrCoffee],
-    ['Tea', nrTea]
-  ])
-
-  var options = {
-    title: 'What gets your fellow students up in the morning?'
-  };
-
-  var chart = new google.visualization.PieChart(document.getElementById('coffeeChart'));
-  chart.draw(data,options);
-}
-
-
