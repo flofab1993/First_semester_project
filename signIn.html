@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login function</title>
+    <title>Login</title>
     <link href="style.css" rel="stylesheet">
 
 </head>
@@ -10,7 +10,7 @@
 <body>
     <div class="container" id="signUp">
         <h1>Welcome back!</h1>
-        <form id="login" action="survey.html" onsubmit="return signIn()">
+        <form id="login" onsubmit="return signIn()" action="javascript:signIn()">
             <p>Log in with your CBS email address</p>
             <input type="text" id="username" placeholder="Your CBS email address..."><br>
             <input type="password" id="password" placeholder="Password"><br>
