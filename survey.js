@@ -16,7 +16,7 @@ function signUp() { // New user registration
   // Check if user already exists
   let userOk = true 
 
-  for (let i =0; i<userArr.length; i++) {
+  for (let i=0; i<userArr.length; i++) {
     if (userArr[i].username === username) {
       userOk = false; // If username exists, userOk becomes false (Basically: user is not ok)
       break; // Break out of the loop
@@ -79,10 +79,12 @@ function signIn() { // Login function
   let takenArr = JSON.parse(localStorage.getItem("Survey taken"))
   let userIsNew = true
 
-  for (let i=0; i<takenArr.length; i++) {
-    if(takenArr[i] === loginName) {
-      userIsNew = false;
-      break;
+  if(takenArr != null) {
+    for (let i=0; i<takenArr.length; i++) {
+      if(takenArr[i] === loginName) {
+        userIsNew = false;
+        break;
+      }
     }
   }
 
@@ -146,7 +148,7 @@ function saveInput() { // Save Input upon submit
   var pop = document.querySelector('input[name=pizzaPasta]:checked').value;
   var toc = document.querySelector('input[name=hotdrinks]:checked').value;
 
-  var user = { // Create an object named user from input 
+  var result = { // Create an object from input 
     age: age,
     nationality: nat,
     gender: gen,
@@ -160,109 +162,113 @@ function saveInput() { // Save Input upon submit
     hotDrink: toc,
   }
 
-  var id = gen + (new Date()).getTime(); // Create id for user based on gender + time in milliseconds from 01/01/1970
-
-  localStorage.setItem(id, JSON.stringify(user)); // Store user object as string with JSON
+  // Save results as object to array in local storage
+  if (localStorage.getItem("Results") === null) { // If no results have been saved yet, create new empty array
+    localStorage.setItem("Results", JSON.stringify([]));
+  }
+  
+  // Push the result in an array and save it in local storage
+  var resultArr = JSON.parse(localStorage.getItem("Results"));
+  resultArr.push(result);
+  localStorage.setItem("Results",JSON.stringify(resultArr));
 }
 
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChart);
 
-// Class to draw charts with up to 5 values
+// Class to draw charts
 class Chart {
 
-    constructor(name, id) {
-        this.name = name; // name of property in result object
-        this.id = id; // id of chart div in html file
+  constructor(category, id) {
+    this.category = category; // name of property in result object
+    this.id = id; // id of chart div in html file
+  }
+
+  drawPieChart() {
+
+    let valueArr = [];
+    let results = JSON.parse(localStorage.getItem("Results"));
+
+    for (let i = 0; i<results.length; i++) { // valueArr gets filled with the answers the subjects gave
+      let usr = results[i]
+      valueArr.push(usr[this.category]);
+    }
+      
+    // Create object listing the number of times each answer possibility occurs
+    var numberOfValue = {};
+
+    valueArr.forEach(function(n) {  // Creates a property for each answer possibility with its amount as the value
+      numberOfValue[n] = (numberOfValue[n] || 0) + 1; 
+    });
+
+    // 2-Dimensional array with each answer possibility and their number of occurence
+    var rankedValues = [];
+    
+    for(let x in numberOfValue){
+      rankedValues.push([x, numberOfValue[x]]) // x is the name of the answer
     }
 
-    drawPieChart() {
-        let valueArr = []; 
+    rankedValues.sort(function(a,b){ // Sort array descending by the amount an answer occurs
+      return b[1] - a[1];
+    }); 
 
-        for (let i = 0; i < localStorage.length; i++) { // valueArr gets filled with the answers the subjects gave
-            if (localStorage.key(i) != "Users" && localStorage.key(i) != "Survey taken") {
-                let usr = JSON.parse(localStorage.getItem(localStorage.key(i)));
-                valueArr.push(usr[this.name]);
-            }
-        }
+    // We just want to display the top 5 recurring answers in the dataset, therefore we will further adjust
+    var otherValues = 0; // This will become the number of answers given that were not part of the top 5
 
-        // Create object listing the number of times each answer possibility occurs
-        var numberOfValue = {};
-
-        valueArr.forEach(function(n) {  // Creates a property for each answer possibility with its amount as the value
-            numberOfValue[n] = (numberOfValue[n] || 0) + 1; 
-        });
-
-        // 2-Dimensional array with each answer possibility and their number of occurence
-        var rankedValues = [];
-        
-        for(let x in numberOfValue){
-            rankedValues.push([x, numberOfValue[x]]) // x is the name of the answer
-        }
-
-        rankedValues.sort(function(a,b){ // Sort array descending by the amount an answer occurs
-            return b[1] - a[1];
-        }); 
-
-        // We just want to display the top 5 recurring answers in the dataset, therefore we will further adjust
-        var otherValues = 0; // This will become the number of answers given that were not part of the top 5
-
-        for(let i=5; i<rankedValues.length; i++) { // Start from 5 and loop through rankedValues and add values to otherValues
-            otherValues += rankedValues[i][1]; // We only want elements from the second column, which are the number of occurences
-        }
-  
-        // Adjusting rankedValues to go into pie chart
-        rankedValues.splice(4,rankedValues.length-5); // Remove every element but the first five
-        rankedValues.unshift(['Name','Number']) // Add labels
-        rankedValues.push(['Other',otherValues]); // Add total of other answers
-    
-        var data = google.visualization.arrayToDataTable(rankedValues); // Make pie chart
-
-        var options = {
-            
-        };
-    
-        var chart = new google.visualization.PieChart(document.getElementById(this.id)); // Reference to pie chart in .html file
-        chart.draw(data, options);   
+    for(let i=5; i<rankedValues.length; i++) { // Start from 5 and loop through rankedValues and add values to otherValues
+      otherValues += rankedValues[i][1]; // We only want elements from the second column, which are the number of occurences
     }
 
-    drawBarChart() {
-        let valueArr = []
+    // Adjusting rankedValues to go into pie chart
+    rankedValues.splice(4,rankedValues.length-5); // Remove every element but the first five
+    rankedValues.unshift(['Name','Number']) // Add labels
+    rankedValues.push(['Other',otherValues]); // Add total of other answers
 
-        for (let i=0; i<localStorage.length; i++) {
-            if (localStorage.key(i) != "Users" && localStorage.key(i) != "Survey taken") {
-                var usr = JSON.parse(localStorage.getItem(localStorage.key(i)));
-                valueArr.push(usr[this.name]);
-            }
-        }
+    var data = google.visualization.arrayToDataTable(rankedValues); // Make pie chart
 
-        var numberOfValue = {};
+    var options = {}; // Special options, like animations, colors, etc. for the charts could go here
 
-        valueArr.forEach(function(n) {  
-            numberOfValue[n] = (numberOfValue[n] || 0) + 1; 
-        });
-
-        var rankedValues = []; 
-
-        for(let x in numberOfValue){
-            rankedValues.push([x, numberOfValue[x]])
-        }
-
-        rankedValues.sort(function(a,b){
-            return b[1] - a[1];
-        });
-
-        rankedValues.unshift(['Name','Number']) // Add labels, as required by Google Charts
-
-        var data = google.visualization.arrayToDataTable(rankedValues); // Make pie chart
-
-        var options = {
-        };
+    var chart = new google.visualization.PieChart(document.getElementById(this.id)); // Reference to pie chart in .html file
+    chart.draw(data, options);   
+  }
     
-        var chart = new google.visualization.BarChart(document.getElementById(this.id)); // Reference to bar chart in .html file
-        chart.draw(data, options);
+  drawBarChart() {
+    let valueArr = []
+
+    let results = JSON.parse(localStorage.getItem("Results"));
+
+    for (let i = 0; i<results.length; i++) { // valueArr gets filled with the answers the subjects gave
+      let usr = results[i]
+      valueArr.push(usr[this.category]);
     }
+
+    var numberOfValue = {};
+
+    valueArr.forEach(function(n) {  
+      numberOfValue[n] = (numberOfValue[n] || 0) + 1; 
+    });
+
+    var rankedValues = []; 
+
+    for(let x in numberOfValue){
+      rankedValues.push([x, numberOfValue[x]])
+    }
+
+    rankedValues.sort(function(a,b){
+      return b[1] - a[1];
+    });
+
+    rankedValues.unshift(['Name','Number']) // Add labels, as required by Google Charts
+
+    var data = google.visualization.arrayToDataTable(rankedValues); // Make chart
+
+    var options = {};
+
+    var chart = new google.visualization.BarChart(document.getElementById(this.id)); // Reference to bar chart in .html file
+    chart.draw(data, options);
+  }
 }
+
 // Create instances of the Chart class to build Pie Charts
 var genders    = new Chart('gender','genderChart');
 var countries  = new Chart('nationality','countryChart');
@@ -277,26 +283,25 @@ var coffeeTea  = new Chart('hotDrink','coffeeChart');
 
 // Function to load in callback with google's API
 function drawChart() {
-    genders.drawPieChart();
-    countries.drawPieChart();
-    relStatus.drawPieChart();
-    eyeColor.drawPieChart();
-    veggie.drawPieChart();
-    beerWine.drawPieChart();
-    dogCat.drawPieChart();
-    pizzaPasta.drawPieChart();
-    coffeeTea.drawPieChart();
-    districts.drawBarChart()
+  genders.drawPieChart();
+  countries.drawPieChart();
+  relStatus.drawPieChart();
+  eyeColor.drawPieChart();
+  veggie.drawPieChart();
+  beerWine.drawPieChart();
+  dogCat.drawPieChart();
+  pizzaPasta.drawPieChart();
+  coffeeTea.drawPieChart();
+  districts.drawBarChart()
 }
 
 // Display average age
 var ageArr = [];
+var resultArr = JSON.parse(localStorage.getItem("Results"))
 
-for (let i=0; i<localStorage.length; i++) {
-  let usr = JSON.parse(localStorage.getItem(localStorage.key(i)));
-  if (Number.isInteger(usr.age)) { // Add age to ageArr only if value is an integer
-    ageArr.push(usr.age);
-  }
+for(let i=0; i<resultArr.length; i++) {
+  let ageValue = resultArr[i]['age'];
+  ageArr.push(ageValue);
 }
 
 // Get sum of all ages
