@@ -41,3 +41,11 @@ button {
   background: #eee;
   padding: 10px;
 }
+div.commentDisplay {
+  background-color: white;
+  /* border-style: solid;
+  border-color: darkgray; */
+  overflow: scroll;
+  height: 150px;
+  width: 500px;
+}

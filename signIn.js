@@ -10,7 +10,7 @@ function signIn() {
     let passwordOK = false
 
     for (let i=0; i<userArr.length; i++) {
-        if (userArr[i].username === loginName && userArr[i].password === loginPassword) { // If a user object exists in local storage, where both username and password match with input
+        if (userArr[i].username === loginName && window.atob(userArr[i].password) === loginPassword) { // If a user object exists in local storage, where both username and password match with input
             usernameOK = true;
             passwordOK = true;
             sessionStorage.setItem("Active user",loginName) // To check later, whether the user has already taken the survey, we will temporarily store his name in the session storage

@@ -30,8 +30,27 @@
                 <div class="pieChart" id="pizzaChart" style="width: 900px; height: 500px;"></div>
                 <div class="pieChart" id="coffeeChart" style="width: 900px; height: 500px;"></div>
             </div>
+            
+            <!-- Comment section -->
+            <h1>Leave a comment!</h1>
+            <div class="commentDisplay" id="postedComment">
+            </div>
+            <div>
+                <form name="postComment" onsubmit="saveComment()">
+                    <label>
+                        Name:<br>
+                        <input type="text" id="name" required>
+                    </label><br>
+                    <label>
+                        Comment:<br>
+                        <input type="text" id="comment" required>
+                    </label><br>
+                    <input type="submit" id="submit">
+                </form>
+            </div>
         </div>
 
         <script type="text/javascript" src="pie_charts.js"></script>
+        <script type="text/javascript" src="comment_section.js"></script>
     </body>
 </html>

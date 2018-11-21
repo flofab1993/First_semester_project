@@ -21,8 +21,6 @@ function saveInput() { // Save Input upon submit
 
   localStorage.setItem("Survey taken", JSON.stringify(takenArr)) // Put the array back into the local storage
 
-  localStorage.removeItem("Active user"); // Remove the active user from the session storage
-
   // Calculate Age
   // Get the values for day, month and year
   var birthDay = document.getElementById("day").value;
@@ -70,8 +68,9 @@ function saveInput() { // Save Input upon submit
     hotDrink: toc,
   }
 
-  // Save results as object to array in local storage
-  if (localStorage.getItem("Results") === null) { // If no results have been saved yet, create new empty array
+  // Save results in local storage
+  // If no results have been saved yet, create new empty array
+  if (localStorage.getItem("Results") === null) {
     localStorage.setItem("Results", JSON.stringify([]));
   }
   
@@ -80,3 +79,64 @@ function saveInput() { // Save Input upon submit
   resultArr.push(result);
   localStorage.setItem("Results",JSON.stringify(resultArr));
 }
+
+/* class Result {
+  constructor(age,nat,gen,rel,cph,eye,veg,bow,pet,pop,toc){
+    this.age = age; // Age
+    this.nat = nat; // Nationality
+    this.gen = gen; // Gender
+    this.rel = rel; // Relationship status
+    this.cph = cph; // District
+    this.eye = eye; // Eye-color
+    this.veg = veg; // Eating preferences (None, Vegetarian or Vegan?)
+    this.bow = bow; // Beer or wine?
+    this.pet = pet; // Cat or Dog?
+    this.pop = pop; // Pizza or pasta?
+    this.toc = toc; // Coffee or Tea?
+  }
+
+  saveResult() {
+    this.nat = document.getElementById("country").value; 
+    this.cph = document.getElementById("district").value;
+    this.gen = document.querySelector('input[name=gender]:checked').value;
+    this.rel = document.querySelector('input[name=relationship]:checked').value;
+    this.eye = document.querySelector('input[name=eye_color]:checked').value;
+    this.veg = document.querySelector('input[name=food]:checked').value;
+    this.bow = document.querySelector('input[name=drinks]:checked').value;
+    this.pet = document.querySelector('input[name=pet]:checked').value;
+    this.pop = document.querySelector('input[name=pizzaPasta]:checked').value;
+    this.toc = document.querySelector('input[name=hotdrinks]:checked').value;
+
+    // Calculate Age
+    // Get the values for day, month and year
+    var birthDay = document.getElementById("day").value;
+    var birthMonth = document.getElementById("month").value;
+    var birthYear = document.getElementById("year").value;
+
+    // Make sure date is valid (e.g. exclude 31st for some months)
+    var thirtyDayMonths = ["02","04","06","09","11"];
+    if(birthDay === "31" && thirtyDayMonths.includes(birthMonth) || (birthDay === "30" && birthMonth === "02")){
+      alert("Invalid birthday!");
+      return false; // Alert when date is invalid and stay at form
+    }
+
+    // Create a date object from a datestring (YYYY-MM-DD)
+    var birthDate = new Date(birthYear + "-" + birthMonth + "-" + birthDay)
+
+    var ageDiff = Date.now() - birthDate.getTime(); // Difference in milliseconds between today and the date of birth
+    var ageDate = new Date(ageDiff); // date after ageDiff milliseconds from 01/01/1970
+
+    this.age = Math.abs(ageDate.getUTCFullYear() - 1970); // The year of ageDate - 1970 gives us the exact age
+
+    // Save results as object to array in local storage
+    if (localStorage.getItem("Results") === null) { // If no results have been saved yet, create new empty array
+      localStorage.setItem("Results", JSON.stringify([]));
+    }
+    
+    // Push the result in an array and save it in local storage
+    var resultArr = JSON.parse(localStorage.getItem("Results"));
+    resultArr.push(result);
+    localStorage.setItem("Results",JSON.stringify(resultArr));
+  }
+}
+ */

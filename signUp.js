@@ -37,7 +37,7 @@ function signUp() { // New user registration
   } else { 
     userArr.push({ // Push an object with the user's username and password to userArr
       username: username,
-      password: password
+      password: window.btoa(password)
     })
     localStorage.setItem("Users", JSON.stringify(userArr)) // Load the new userArr into the local storage
     alert("You have been successfully registered. You will now be redirected to the login page")
