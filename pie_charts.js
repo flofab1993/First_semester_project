@@ -3,7 +3,6 @@ google.charts.setOnLoadCallback(drawChart);
 
 var results = JSON.parse(localStorage.getItem("Results")) // Get array with objects of results
 
-// Class to draw charts
 class Chart {
     
     constructor(category, id) {

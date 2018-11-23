@@ -1,3 +1,18 @@
+class Result {
+  constructor(age, nat, gen, rel, cph, eye, veg, alc, pet, piz, tea) {
+    this.age = age,
+    this.nat = nat,
+    this.gen = gen,
+    this.rel = rel,
+    this.cph = cph,
+    this.eye = eye,
+    this.veg = veg,
+    this.alc = alc,
+    this.pet = pet,
+    this.piz = piz,
+    this.tea = tea
+  }
+}
 function saveInput() { // Save Input upon submit
 
   // Make sure everyone only takes the survey once

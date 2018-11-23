@@ -8,18 +8,19 @@
 </head>
 
 <body>
-    <div class="container" id="signUp">
+    <div class="container" id="signInUp">
         <h1>Welcome back!</h1>
-        <form id="login" onsubmit="return signIn()" action="javascript:signIn()">
+        <form id="login" onsubmit="return logIn()" action="javascript:signIn()">
             <p>Log in with your CBS email address</p>
-            <input type="text" id="username" placeholder="Your CBS email address..."><br>
-            <input type="password" id="password" placeholder="Password"><br>
+            <input type="text" id="loginName" placeholder="Your CBS email address..."><br>
+            <input type="password" id="loginPassword" placeholder="Password"><br>
             <button type="submit">Log in</button>
         </form>
 
         <p>New user? <a href="signUp.html">Sign up.</a></p>
     </div>
     
-    <script src="signIn.js"></script>
+    <script src="class_user.js"></script>
+    <script src="enterSite.js"></script>
 </body> 
 </html>

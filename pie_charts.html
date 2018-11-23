@@ -2,7 +2,7 @@
 
 <html>
     <head>
-        <title>Pie Chart</title>
+        <title>Results</title>
         <meta charset="utf-8" />
         <meta name="description" content="Pie charts">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,11 +39,11 @@
                 <form name="postComment" onsubmit="saveComment()">
                     <label>
                         Name:<br>
-                        <input type="text" id="name" required>
+                        <input type="text" id="name" maxlength="20" required>
                     </label><br>
                     <label>
                         Comment:<br>
-                        <input type="text" id="comment" required>
+                        <input type="text" id="comment" maxlength="200" required>
                     </label><br>
                     <input type="submit" id="submit">
                 </form>
