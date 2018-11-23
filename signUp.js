@@ -10,8 +10,9 @@ function signUp() { // New user registration
   let password = document.getElementById("newPassword").value;
   let confirmPw = document.getElementById("confirmPassword").value;
 
-  var emailValid = /\w{4}1\d\w{2}@student.cbs.dk/; // Regular expression for a CBS mail adress no older than from 2010
-  var userArr = JSON.parse(localStorage.getItem("Users")) // Array containing login data of every user as an object
+  let emailValid = /\w{4}1\d\w{2}@student.cbs.dk/; // Regular expression for a CBS mail adress no older than from 2010
+  let pwValid = /(?=.{6,})(?=.*[A-Z])(?=.*[0-9])/; // Password must: be at least 6 digits, contain an uppercase, contain a number
+  let userArr = JSON.parse(localStorage.getItem("Users")); // Array containing login data of every user as an object
 
   // Check if user already exists
   let userOk = true 
@@ -31,6 +32,9 @@ function signUp() { // New user registration
   } else if (!userOk) { // Check if user already exists
     alert("User already exists!");
     return false;
+  } else if (!pwValid.test(password)) {
+    alert("Your password must be at least 6 characters long and must contain at least one uppercase letter and a number.");
+    return false
   } else if (password != confirmPw) { // Check if password confirmation matches
     alert("Your passwords don't match!");
     return false;
