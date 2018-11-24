@@ -1,16 +1,16 @@
 class Result {
   constructor(age, nat, gen, rel, cph, eye, veg, alc, pet, piz, tea) {
     this.age = age,
-    this.nat = nat,
-    this.gen = gen,
-    this.rel = rel,
-    this.cph = cph,
-    this.eye = eye,
-    this.veg = veg,
-    this.alc = alc,
-    this.pet = pet,
-    this.piz = piz,
-    this.tea = tea
+    this.nat = nat, // Nationality
+    this.gen = gen, // Gender
+    this.rel = rel, // Relationship status
+    this.cph = cph, // District
+    this.eye = eye, // Eye color
+    this.veg = veg, // Eating (Vegetarian, Vegan or none)
+    this.alc = alc, // Beer or Wine
+    this.pet = pet, // Dog or cat
+    this.piz = piz, // Pizza or Pasta
+    this.tea = tea  // Tea or coffee
   }
 }
 function saveInput() { // Save Input upon submit
