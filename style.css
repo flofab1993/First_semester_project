@@ -11,6 +11,13 @@ h2 {
   padding-top: 15px;
   padding-bottom: 5px;
 }
+#signInUp {
+  width: 500px;
+  margin: 0 auto;
+  background: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+}
 #wrapper {
   width: 600px;
   margin: 0 auto;
