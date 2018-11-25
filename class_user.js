@@ -1,28 +1,33 @@
+if (localStorage.getItem("Comments") === null) {
+  localStorage.setItem("Comments", JSON.stringify([]));
+}
+
 class User {
-  constructor(username,password) {
+  constructor(username,email,password) {
     this.username = username,
+    this.email = email,
     this.password = password,
     this.userArr = JSON.parse(localStorage.getItem("Users"));
     this.emailValid = /\w{4}1\d\w{2}@student.cbs.dk/,
-    this.pwValid = /(?=.{6,})(?=.*[A-Z])(?=.*[0-9])/
+    this.pwValid = /(?=.{6,})(?=.*[A-Z])(?=.*[0-9])/ 
   }
 
   signUp() {
-    let userOk = true;
-
+    
+    // Check whether username or email already exist
     for (let i=0; i<this.userArr.length; i++) {
       if (this.userArr[i].username === this.username) {
-        userOk = false; // If username exists, userOk becomes false (Basically: user is not ok)
-        break; // Break out of the loop
+        alert("Username already exists")
+        return false;
+      } else if (this.userArr[i].email === this.email) {
+        alert("User already exists!")
+        return false;
       }
     }
       
     // Validate Input
-    if (!this.emailValid.test(this.username)) { // Check if username is a CBS mail adress
+    if (!this.emailValid.test(this.email)) { // Check if username is a CBS mail adress
       alert("Username must be a CBS email adress!");
-      return false;
-    } else if (!userOk) { // Check if user already exists
-      alert("User already exists!");
       return false;
     } else if (!this.pwValid.test(this.password)) {
       alert("Your password must be at least 6 characters long and must contain at least one uppercase letter and a number.");
@@ -31,8 +36,9 @@ class User {
       alert("Your passwords don't match!");
       return false;
     } else { 
-      userArr.push({ // Push an object with the user's username and password to userArr
+      this.userArr.push({ // Push an object with the user's username and password to userArr
         username: this.username,
+        email: this.email,
         password: window.btoa(this.password)
       })
       localStorage.setItem("Users", JSON.stringify(this.userArr)) // Load the new userArr into the local storage
@@ -44,13 +50,30 @@ class User {
     let usernameOK = false 
     let passwordOK = false
 
+    // Get username from email adress or vice versa
+    if (this.emailValid.test(this.username)) {
+      for(let i=0; i<this.userArr.length; i++) {
+        if (this.userArr[i].email === this.username) {
+          this.username = this.userArr[i].username;
+          break;
+        }
+      }
+    } else {
+      for(let i=0; i<this.userArr.length; i++) {
+        if (this.userArr[i].username === this.username) {
+          this.email = this.userArr[i].email;
+        }
+      }
+    }
+
+    // Check if the input matches a registered user
     for (let i=0; i<this.userArr.length; i++) {
-      if (this.userArr[i].username === this.username && window.atob(this.userArr[i].password) === this.password) { // If a user object exists in local storage, where both username and password match with input
+      if ((this.userArr[i].username === this.username || this.userArr[i].email === this.email) && window.atob(this.userArr[i].password) === this.password) { // If a user object exists in local storage, where both username and password match with input
         usernameOK = true;
         passwordOK = true;
-        sessionStorage.setItem("Active user",this.username) // To check later, whether the user has already taken the survey, we will temporarily store his name in the session storage
+        sessionStorage.setItem("Active user",this.email) // To check later, whether the user has already taken the survey, we will temporarily store his username and email in the session storage
         break;
-      } else if (this.userArr[i].username === this.username) { // If only the username matches
+      } else if (this.userArr[i].username === this.username || this.userArr[i].email === this.email) { // If only the username matches
         usernameOK = true;
       }
     }
@@ -68,12 +91,10 @@ class User {
     let takenArr = JSON.parse(localStorage.getItem("Survey taken"))
     let userIsNew = true
 
-    if(takenArr != null) {
-      for (let i=0; i<takenArr.length; i++) {
-        if(takenArr[i] === this.username) {
-          userIsNew = false;
-          break;
-        }
+    for (let i=0; i<takenArr.length; i++) {
+      if(takenArr[i] === this.email) {
+        userIsNew = false;
+        break;
       }
     }
 
@@ -83,5 +104,26 @@ class User {
     } else {
       window.open('pie_charts.html',"_self");
     }
+  }
+
+  writeComment(text) {
+    let commentArr = JSON.parse(localStorage.getItem("Comments"))
+    
+    // Get time the comment was written
+    let d = new Date();
+    let time = d.getTime(); // returns the date in milliseconds since 01/01/1997
+
+    // Get username
+    for(let i=0; i<this.userArr.length; i++) {
+      if(this.userArr[i].email === sessionStorage.getItem("Active user")) {
+        var name = this.userArr[i].username
+        this.username = this.userArr[i].username // Active user is only saved as email, therefore we want to change it to the username here
+        break;
+      }
+    }
+
+    commentArr.push({author: name, date: time, text: text});
+
+    localStorage.setItem("Comments", JSON.stringify(commentArr))
   }
 }

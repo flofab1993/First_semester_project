@@ -1,3 +1,7 @@
+if (localStorage.getItem("Survey taken") === null) {
+  localStorage.setItem("Survey taken", JSON.stringify([])) // If array doesn't exist yet, create one
+}
+
 class Result {
   constructor(age, nat, gen, rel, cph, eye, veg, alc, pet, piz, tea) {
     this.age = age,
@@ -13,14 +17,11 @@ class Result {
     this.tea = tea  // Tea or coffee
   }
 }
+
 function saveInput() { // Save Input upon submit
 
   // Make sure everyone only takes the survey once
   var takenArr = JSON.parse(localStorage.getItem("Survey taken"));
-
-  if (localStorage.getItem("Survey taken") === null) {
-    localStorage.setItem("Survey taken", JSON.stringify([])) // If array doesn't exist yet, create one
-  }
 
   // This makes sure that you can not go back from the pie charts and take the survey again
   for (let i=0; i<takenArr.length; i++) {
