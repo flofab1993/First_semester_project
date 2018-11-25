@@ -1,7 +1,3 @@
-if (localStorage.getItem("Comments") === null) {
-  localStorage.setItem("Comments", JSON.stringify([]));
-}
-
 class User {
   constructor(username,email,password) {
     this.username = username,
@@ -13,7 +9,6 @@ class User {
   }
 
   signUp() {
-    
     // Check whether username or email already exist
     for (let i=0; i<this.userArr.length; i++) {
       if (this.userArr[i].username === this.username) {
@@ -29,18 +24,21 @@ class User {
     if (!this.emailValid.test(this.email)) { // Check if username is a CBS mail adress
       alert("Username must be a CBS email adress!");
       return false;
-    } else if (!this.pwValid.test(this.password)) {
+    } else if (!this.pwValid.test(this.password)) { // Check if password fulfills requirements
       alert("Your password must be at least 6 characters long and must contain at least one uppercase letter and a number.");
       return false
     } else if (this.password != document.getElementById("confirmPassword").value) { // Check if password confirmation matches
       alert("Your passwords don't match!");
       return false;
     } else { 
-      this.userArr.push({ // Push an object with the user's username and password to userArr
-        username: this.username,
-        email: this.email,
-        password: window.btoa(this.password)
-      })
+      // Create new user:
+      this.userArr.push(
+        new User( 
+          this.username,
+          this.email,
+          window.btoa(this.password) // Encrypt password
+        )
+      ) 
       localStorage.setItem("Users", JSON.stringify(this.userArr)) // Load the new userArr into the local storage
       alert("You have been successfully registered. You will now be redirected to the login page")
     }
@@ -50,15 +48,15 @@ class User {
     let usernameOK = false 
     let passwordOK = false
 
-    // Get username from email adress or vice versa
-    if (this.emailValid.test(this.username)) {
+    // Allow user to either login with their username or email adress
+    if (this.emailValid.test(this.username)) { // Get username from email address
       for(let i=0; i<this.userArr.length; i++) {
         if (this.userArr[i].email === this.username) {
           this.username = this.userArr[i].username;
           break;
         }
       }
-    } else {
+    } else { // Get email address from username
       for(let i=0; i<this.userArr.length; i++) {
         if (this.userArr[i].username === this.username) {
           this.email = this.userArr[i].email;
@@ -121,9 +119,8 @@ class User {
         break;
       }
     }
-
-    commentArr.push({author: name, date: time, text: text});
-
+    
+    commentArr.push(new Comment(name,text,time)) // Add new comment to comment array
     localStorage.setItem("Comments", JSON.stringify(commentArr))
   }
 }

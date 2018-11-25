@@ -1,5 +1,10 @@
 google.charts.load('current', {'packages':['corechart']});
-google.charts.setOnLoadCallback(drawChart);
+google.charts.setOnLoadCallback(drawChart); 
+
+// Initialize array with users, if it doesn't exist yet
+if(localStorage.getItem("Users") === null) {
+    localStorage.setItem("Users", JSON.stringify([]));
+}
 
 var results = JSON.parse(localStorage.getItem("Results")) // Get array with objects of results
 
@@ -15,7 +20,7 @@ var dogCat     = new Chart('pet','petChart');
 var pizzaPasta = new Chart('food','pizzaChart');
 var coffeeTea  = new Chart('hotDrink','coffeeChart');
   
-  // Function to load in callback with google's API
+// Function to load in callback with google's API
 function drawChart() {
     genders.drawPieChart();
     countries.drawPieChart();
@@ -29,12 +34,13 @@ function drawChart() {
     districts.drawBarChart()
 }
 
-// Count number of students that have taken the survey
+// Count and display number of students that have taken the survey
 document.getElementById("userCounter").innerHTML = "We have asked " + results.length + " E-Business students.";
 
 // Display average age
 var ageArr = [];
 
+// Push each age to ageArr
 for(let i=0; i<results.length; i++) {
     let ageValue = results[i]['age'];
     ageArr.push(ageValue);
@@ -61,23 +67,27 @@ if (localStorage.getItem("Comments") === null) {
 let commentArr = JSON.parse(localStorage.getItem("Comments"));
 let activeUser = new User(sessionStorage.getItem("Active user"));
 
-function showComments() {
-    let commentString = "";
+// Display comments in a readable way
+function showComments() { 
+    let commentBlock = "";
+
+    // Loop through array with comment information and add their readable format to the comment block
     for (let i=commentArr.length - 1; i >= 0; i--) {
-        var comment = new Comment (commentArr[i].author, commentArr[i].text, commentArr[i].date)
-        commentString += comment.stringifyComment();
+        var comment = new Comment (commentArr[i].author, commentArr[i].text, commentArr[i].time)
+        commentBlock += comment.stringifyComment();
     }
-    document.getElementById("commentSection").innerHTML = commentString;
+    document.getElementById("commentSection").innerHTML = commentBlock;
 }
 
 function postComment() {
     if (sessionStorage.getItem("Active user") === null) { // If no one is logged in, redirect to login page
         alert("You must be logged in to write a comment!")
         window.open("signIn.html","_self")
+    } else if (document.getElementById("comment").value === "") { // Alert if comment box is left empty
+        alert("Write something more meaningful!");
     } else {
-        activeUser.writeComment(document.getElementById("comment").value);
-        commentArr = JSON.parse(localStorage.getItem("Comments"));
-
+        activeUser.writeComment(document.getElementById("comment").value); // Instance of class User writes a comment
+        commentArr = JSON.parse(localStorage.getItem("Comments")); // Update comment array
         showComments();
     }
 }

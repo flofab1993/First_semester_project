@@ -1,12 +1,12 @@
 class Comment {
-    constructor(name, text, time) {
-        this.name = name;
+    constructor(author, text, time) {
+        this.author = author; // Author of the comment
         this.text = text;
-        this.time = time;
+        this.time = time; // Time in milliseconds
     }
 
-    stringifyComment() {
-        var comment = "<span style='font-size:70%'>" + this.name + " wrote:</span><br>" 
+    stringifyComment() { // Build a readable comment block for a single comment
+        var comment = "<span style='font-size:70%'>" + this.author + " wrote:</span><br>" 
                          + this.text + "<br>" 
                          + "<span style='font-size:70%'>" + new Date(this.time) + "</span><br>";
         return comment
