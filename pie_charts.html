@@ -33,24 +33,20 @@
             
             <!-- Comment section -->
             <h1>Leave a comment!</h1>
-            <div class="commentDisplay" id="postedComment">
+            <div class="commentDisplay" id="commentSection">
             </div>
             <div>
-                <form name="postComment" onsubmit="saveComment()">
-                    <label>
-                        Name:<br>
-                        <input type="text" id="name" maxlength="20" required>
-                    </label><br>
-                    <label>
-                        Comment:<br>
-                        <input type="text" id="comment" maxlength="200" required>
-                    </label><br>
-                    <input type="submit" id="submit">
-                </form>
+                <label>
+                    Comment:<br>
+                    <input type="text" id="comment" maxlength="200" placeholder="Write a comment!" required>
+                </label>
+                <button type="button" id="post" onclick="postComment()">Post comment</button>
             </div>
         </div>
 
+        <script type="text/javascript" src="class_chart.js"></script>
+        <script type="text/javascript" src="class_user.js"></script>
         <script type="text/javascript" src="pie_charts.js"></script>
-        <script type="text/javascript" src="comment_section.js"></script>
+        <!-- <script type="text/javascript" src="comment_section.js"></script> -->
     </body>
 </html>

@@ -1,6 +1,6 @@
 // Initialize local storage spot for comments
-if (localStorage.getItem("comments") === null) {
-    localStorage.setItem("comments", JSON.stringify([]));
+if (localStorage.getItem("Comments") === null) {
+    localStorage.setItem("Comments", JSON.stringify([]));
 }
 
 class Comment {
