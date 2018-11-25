@@ -61,27 +61,23 @@ if (localStorage.getItem("Comments") === null) {
 let commentArr = JSON.parse(localStorage.getItem("Comments"));
 let activeUser = new User(sessionStorage.getItem("Active user"));
 
-let commentString = "";
-for (let i=commentArr.length - 1; i >= 0; i--) {
-    var comment = new Comment (commentArr[i].author, commentArr[i].text, commentArr[i].date)
-    commentString += comment.stringifyComment();
+function showComments() {
+    let commentString = "";
+    for (let i=commentArr.length - 1; i >= 0; i--) {
+        var comment = new Comment (commentArr[i].author, commentArr[i].text, commentArr[i].date)
+        commentString += comment.stringifyComment();
+    }
+    document.getElementById("commentSection").innerHTML = commentString;
 }
-document.getElementById("commentSection").innerHTML = commentString;
-
 
 function postComment() {
     if (sessionStorage.getItem("Active user") === null) { // If no one is logged in, redirect to login page
-        alert("You mus be logged in to write a comment!")
+        alert("You must be logged in to write a comment!")
         window.open("signIn.html","_self")
     } else {
         activeUser.writeComment(document.getElementById("comment").value);
         commentArr = JSON.parse(localStorage.getItem("Comments"));
 
-        commentString = "";
-        for (let i=commentArr.length - 1; i >= 0; i--) {
-            var comment = new Comment (commentArr[i].author, commentArr[i].text, commentArr[i].date)
-            commentString += comment.stringifyComment();
-        }
-        document.getElementById("commentSection").innerHTML = commentString;
+        showComments();
     }
 }
