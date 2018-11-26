@@ -50,7 +50,7 @@ class Chart {
         var chart = new google.visualization.PieChart(document.getElementById(this.id)); // Reference to pie chart in .html file
         chart.draw(data, options);   
     }
-    
+
     drawBarChart() {
         let valueArr = []
   

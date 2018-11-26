@@ -3,18 +3,18 @@ if (localStorage.getItem("Survey taken") === null) {
 }
 
 class Result {
-  constructor(age, nat, gen, rel, cph, eye, veg, alc, pet, piz, tea) {
+  constructor(age, nationality, gender, status, district, eye_color, eating, drinks, pet, food, hotDrink) {
     this.age = age,
-    this.nat = nat, // Nationality
-    this.gen = gen, // Gender
-    this.rel = rel, // Relationship status
-    this.cph = cph, // District
-    this.eye = eye, // Eye color
-    this.veg = veg, // Eating (Vegetarian, Vegan or none)
-    this.alc = alc, // Beer or Wine
+    this.nationality = nationality, // Nationality
+    this.gender = gender, // Gender
+    this.status = status, // Relationship status
+    this.district = district, // District
+    this.eye_color = eye_color, // Eye color
+    this.eating = eating, // Eating (Vegetarian, Vegan or none)
+    this.drinks = drinks, // Beer or Wine
     this.pet = pet, // Dog or cat
-    this.piz = piz, // Pizza or Pasta
-    this.tea = tea  // Tea or coffee
+    this.food = food, // Pizza or Pasta
+    this.hotDrink = hotDrink  // Tea or coffee
   }
 }
 
@@ -58,20 +58,20 @@ function saveInput() { // Save Input upon submit
 
   var age = Math.abs(ageDate.getUTCFullYear() - 1970); // The year of ageDate - 1970 gives us the exact age
 
-  var result = { // Create an object from input 
-    age: age,
-    nationality: document.getElementById("country").value,
-    gender: document.querySelector('input[name=gender]:checked').value,
-    status: document.querySelector('input[name=relationship]:checked').value,
-    district: document.getElementById("district").value,
-    eye_color: document.querySelector('input[name=eye_color]:checked').value,
-    eating: document.querySelector('input[name=food]:checked').value,
-    drinks: document.querySelector('input[name=drinks]:checked').value,
-    pet: document.querySelector('input[name=pet]:checked').value,
-    food: document.querySelector('input[name=pizzaPasta]:checked').value,
-    hotDrink: document.querySelector('input[name=hotdrinks]:checked').value,
-  }
-
+  var result = new Result(
+    age,
+    document.getElementById("country").value,
+    document.querySelector('input[name=gender]:checked').value,
+    document.querySelector('input[name=relationship]:checked').value,
+    document.getElementById("district").value,
+    document.querySelector('input[name=eye_color]:checked').value,
+    document.querySelector('input[name=food]:checked').value,
+    document.querySelector('input[name=drinks]:checked').value,
+    document.querySelector('input[name=pet]:checked').value,
+    document.querySelector('input[name=pizzaPasta]:checked').value,
+    document.querySelector('input[name=hotdrinks]:checked').value
+    ) 
+  
   // Save results in local storage
   // If no results have been saved yet, create new empty array
   if (localStorage.getItem("Results") === null) {

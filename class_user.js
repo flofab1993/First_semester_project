@@ -21,7 +21,7 @@ class User {
     }
       
     // Validate Input
-    if (!this.emailValid.test(this.email)) { // Check if username is a CBS mail adress
+    if (this.emailValid.test(this.email)) { // Check if username is a CBS mail adress
       alert("Username must be a CBS email adress!");
       return false;
     } else if (!this.pwValid.test(this.password)) { // Check if password fulfills requirements
