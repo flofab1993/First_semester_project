@@ -9,16 +9,16 @@ if(localStorage.getItem("Users") === null) {
 var results = JSON.parse(localStorage.getItem("Results")) // Get array with objects of results
 
 // Create instances of the Chart class to build Pie Charts
-var genders    = new Chart('gender','genderChart');
-var countries  = new Chart('nationality','countryChart');
-var districts  = new Chart('district','cphChart');
-var relStatus  = new Chart('status','statusChart');
-var eyeColor   = new Chart('eye_color','eyeChart');
-var veggie     = new Chart('eating','veggieChart');
-var beerWine   = new Chart('drinks','drinksChart');
-var dogCat     = new Chart('pet','petChart');
-var pizzaPasta = new Chart('food','pizzaChart');
-var coffeeTea  = new Chart('hotDrink','coffeeChart');
+var genders    = new Category('gender','genderChart');
+var countries  = new Category('nationality','countryChart');
+var districts  = new Category('district','cphChart');
+var relStatus  = new Category('status','statusChart');
+var eyeColor   = new Category('eye_color','eyeChart');
+var veggie     = new Category('eating','veggieChart');
+var beerWine   = new Category('drinks','drinksChart');
+var dogCat     = new Category('pet','petChart');
+var pizzaPasta = new Category('food','pizzaChart');
+var coffeeTea  = new Category('hotDrink','coffeeChart');
   
 // Function to load in callback with google's API
 function drawChart() {
