@@ -21,8 +21,8 @@ class User {
     }
       
     // Validate Input
-    if (this.emailValid.test(this.email)) { // Check if username is a CBS mail adress
-      alert("Username must be a CBS email adress!");
+    if (!this.emailValid.test(this.email)) { // Check if username is a CBS mail adress
+      alert("Email must be a CBS email adress!");
       return false;
     } else if (!this.pwValid.test(this.password)) { // Check if password fulfills requirements
       alert("Your password must be at least 6 characters long and must contain at least one uppercase letter and a number.");
@@ -102,6 +102,13 @@ class User {
     } else {
       window.open('pie_charts.html',"_self");
     }
+  }
+
+  // Log out the active user
+  logOut() {
+    sessionStorage.removeItem("Active user") // Deletes the active user
+    alert("You have been successfully logged out!")
+    window.open("signIn.html","_self")
   }
 
   writeComment(text) {

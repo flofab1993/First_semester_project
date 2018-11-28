@@ -1,3 +1,12 @@
+// Show comments upon loading th page
+window.onload = showComments;
+
+// If no user is logged in, the login page is opened
+if (sessionStorage.getItem("Active user") == null) {
+    window.open("signIn.html","_self");
+} 
+
+// Load google charts
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChart); 
 
@@ -91,3 +100,6 @@ function postComment() {
         showComments();
     }
 }
+
+// Log out
+document.getElementById("logout").addEventListener("click", activeUser.logOut);
