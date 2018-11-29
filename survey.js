@@ -2,6 +2,12 @@ if (localStorage.getItem("Survey taken") === null) {
   localStorage.setItem("Survey taken", JSON.stringify([])) // If array doesn't exist yet, create one
 }
 
+// Avoid taking the survey without being logged in
+if(sessionStorage.getItem("Active user") === null) {
+  alert("You have to be logged in to take the survey");
+  window.open("signIn.html", "_self")
+}
+
 class Result {
   constructor(age, nationality, gender, status, district, eye_color, eating, drinks, pet, food, hotDrink) {
     this.age = age,

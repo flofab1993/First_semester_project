@@ -2,13 +2,9 @@
 window.onload = showComments;
 
 // If no user is logged in, the login page is opened
-if (sessionStorage.getItem("Active user") == null) {
+if (sessionStorage.getItem("Active user") === null) {
     window.open("signIn.html","_self");
 } 
-
-// Load google charts
-google.charts.load('current', {'packages':['corechart']});
-google.charts.setOnLoadCallback(drawChart); 
 
 // Initialize array with users, if it doesn't exist yet
 if(localStorage.getItem("Users") === null) {
@@ -16,6 +12,10 @@ if(localStorage.getItem("Users") === null) {
 }
 
 var results = JSON.parse(localStorage.getItem("Results")) // Get array with objects of results
+
+// Load google charts
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(drawChart); 
 
 // Create instances of the Chart class to build Pie Charts
 var genders    = new Category('gender','genderChart');
@@ -29,7 +29,7 @@ var dogCat     = new Category('pet','petChart');
 var pizzaPasta = new Category('food','pizzaChart');
 var coffeeTea  = new Category('hotDrink','coffeeChart');
   
-// Function to load in callback with google's API
+// Function to load in callback of Google Charts
 function drawChart() {
     genders.drawPieChart();
     countries.drawPieChart();
@@ -47,9 +47,9 @@ function drawChart() {
 document.getElementById("userCounter").innerHTML = "We have asked " + results.length + " E-Business students.";
 
 // Display average age
+// Push each age to ageArr
 var ageArr = [];
 
-// Push each age to ageArr
 for(let i=0; i<results.length; i++) {
     let ageValue = results[i]['age'];
     ageArr.push(ageValue);
@@ -62,10 +62,10 @@ for(let i=0; i<ageArr.length; i++) {
 }
 
 // Calculate average age
-var averageAge = ageSum/ageArr.length
+var averageAge = Math.round((ageSum/ageArr.length) * 100)/100
 
 // Display in HTML with the average Age rounded to two decimals
-document.getElementById("avgAge").innerHTML = "The average age of your fellow students is " + Math.round(averageAge * 100)/100 + " years"
+document.getElementById("avgAge").innerHTML = "The average age of your fellow students is " + averageAge + " years"
 
 // Comment section
 // Initialize local storage spot for comments
@@ -82,7 +82,7 @@ function showComments() {
 
     // Loop through array with comment information and add their readable format to the comment block
     for (let i=commentArr.length - 1; i >= 0; i--) {
-        var comment = new Comment (commentArr[i].author, commentArr[i].text, commentArr[i].time)
+        var comment = new Comment(commentArr[i].author, commentArr[i].text, commentArr[i].time)
         commentBlock += comment.stringifyComment();
     }
     document.getElementById("commentSection").innerHTML = commentBlock;

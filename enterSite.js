@@ -3,7 +3,7 @@ if(localStorage.getItem("Users") === null) {
     localStorage.setItem("Users", JSON.stringify([]));
 }
 
-// Initialize array with users, if it doesn't exist yet
+// Initialize array with users that have taken the survey, if it doesn't exist yet
 if (localStorage.getItem("Survey taken") === null) {
     localStorage.setItem("Survey taken", JSON.stringify([])) 
 }

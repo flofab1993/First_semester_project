@@ -1,7 +1,7 @@
 class Category {
     
     constructor(name, id) {
-        this.name = name; // name of property in result object
+        this.name = name; // name of the category (property in result object)
         this.id = id; // id of chart div in html file
     }
   
